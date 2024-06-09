@@ -1,4 +1,4 @@
-package org.dayone;
+package com.dayone;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
