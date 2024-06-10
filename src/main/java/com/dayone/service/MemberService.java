@@ -1,7 +1,7 @@
 package com.dayone.service;
 
 import com.dayone.model.Auth;
-import com.dayone.model.MemberEntity;
+import com.dayone.persist.entity.MemberEntity;
 import com.dayone.persist.MemberRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -40,6 +40,13 @@ public class MemberService implements UserDetailsService {
     }
 
     public MemberEntity authenticate(Auth.SignIn member) {
-        return null;
+        var user = this.memberRepository.findByUsername(member.getUsername())
+                                        .orElseThrow(() -> new RuntimeException("존재하지 않는 ID 입니다."));
+
+        if(!this.passwordEncoder.matches(member.getPassword(), user.getPassword())) {
+            throw new RuntimeException("비밀번호가 일치하지 않습니다.");
+        }
+
+        return user;
     }
 }

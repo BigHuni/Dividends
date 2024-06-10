@@ -1,4 +1,4 @@
-package com.dayone.model;
+package com.dayone.persist.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
@@ -25,6 +25,7 @@ public class MemberEntity implements UserDetails {
 
     private String username;
 
+    @JsonIgnore
     private String password;
 
     @ElementCollection(fetch = FetchType.EAGER)
@@ -36,6 +37,16 @@ public class MemberEntity implements UserDetails {
         return this.roles.stream()
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public String getPassword() {
+        return this.password;
+    }
+
+    @Override
+    public String getUsername() {
+        return this.username;
     }
 
     @Override
@@ -57,4 +68,6 @@ public class MemberEntity implements UserDetails {
     public boolean isEnabled() {
         return false;
     }
+
+
 }

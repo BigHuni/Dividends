@@ -1,5 +1,6 @@
 package com.dayone.model;
 
+import com.dayone.persist.entity.MemberEntity;
 import lombok.Data;
 
 import java.util.List;

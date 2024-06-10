@@ -1,6 +1,6 @@
 package com.dayone.model.constants;
 
-public enum authority {
+public enum Authority {
 
     ROLE_READ,
     ROLE_WRITE;
