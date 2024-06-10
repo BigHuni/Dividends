@@ -8,12 +8,14 @@ import com.dayone.persist.DividendRepository;
 import com.dayone.persist.entity.CompanyEntity;
 import com.dayone.persist.entity.DividendEntity;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 
@@ -23,7 +25,9 @@ public class FinanceService {
 
     private final DividendRepository dividendRepository;
 
+    @Cacheable(key = "#companyName", value = "finance")
     public ScrapedResult getDividendByCompanyName(String companyName) {
+        log.info("Search company -> " + companyName);
 
         // 1. 화사명 기준으로 회사 정보 조회
         CompanyEntity company = this.companyRepository.findByName(companyName)
@@ -34,17 +38,11 @@ public class FinanceService {
 
         // 3. 결과 조합 후 반환
         List<Dividend> dividends = dividendEntities.stream()
-                                .map(e -> Dividend.builder()
-                                        .date(e.getDate())
-                                        .dividend(e.getDividend())
-                                        .build())
+                                .map(e -> new Dividend(e.getDate(), e.getDividend()))
                                 .collect(Collectors.toList());
 
 
-        return new ScrapedResult(Company.builder()
-                                .ticker(company.getTicker())
-                                .name(company.getName())
-                                .build(),
-                dividends);
+        return new ScrapedResult(new Company(company.getTicker(), company.getName()),
+                                dividends);
     }
 }

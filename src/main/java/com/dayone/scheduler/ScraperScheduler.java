@@ -36,10 +36,8 @@ public class ScraperScheduler {
         // 회사마다 배당금 정보 스크래핑 갱신
         for(var company : companies) {
             log.info("Scraping scheduler is started -> " + company.getName());
-            ScrapedResult scrapedResult = this.yahhoFinanceScraper.scrap(Company.builder()
-                                                                                .name(company.getName())
-                                                                                .ticker(company.getTicker())
-                                                                                .build());
+            ScrapedResult scrapedResult = this.yahhoFinanceScraper.scrap(
+                                                         new Company(company.getTicker(), company.getName()));
 
             // 스크래핑한 배당금 정보 중 DB 없는 값은 저장
             scrapedResult.getDividends().stream()
